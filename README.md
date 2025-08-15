@@ -9,6 +9,8 @@ Objectifs :
 - le design, l'utilisation, l'UX doivent être proche voire identique à ce qui se fait pour mobile => CSS responsive
 - on doit pouvoir faire des modifications de parametres et de données à la volée et les sauvegardés (y compris fichier JSON) => création de boutons "editer" et "sauvegarder"
 
+  J'utilisais au départ, un fichier excel à ce sujet (que vous trouverez).
+
 La partie PWA :
 
 Dans un premier temps, les codes utilisés ne permettaient pas une mise en cache dans les navigateurs mobiles (Chrome ou Firefox).
@@ -39,11 +41,13 @@ Structures :
 Dossier A :
 Pas de dossier, 3 fichiers : manifest.json, sw.js et metallerie-pwa.html.
 Les styles CSS et les scripts JavaScripts de calculs et autres, sont intégré dans le fichier html.
+Tester dans le répertoire "www" de WAMP, en local puis en wifi sur le mobile à distance (via l'adresse du serveur).
 
 Dossier B :
 3 dossiers : css (avec le fichier styles.css), js (avec le fichier scripts.js) et images (avec toutes les images du site).
 3 fichiers à la racine : manifest.json, sw.js et metallerie-pwa.html
 Les styles CSS et les scripts JavaScripts ne sont pas dans le code du fichier html, ils sont appellés à partir de celui çi.
+Test en local uniquement.
 
 
 L'application APK :
