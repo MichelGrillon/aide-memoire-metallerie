@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métallerie - Aide-mémoires</title>
+    
+        <!-- Lien vers le fichier CSS externe -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Lien vers le fichier json -->
+    <link rel="manifest" href="manifest.json">
+  </head>
+  
+  <body>
+    <div class="container">
+      <!-- ===== EN-TÊTE DE L'APPLICATION ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="header">
+        <h1>⚒️ Métallerie & Soudure ⚡</h1>
+        <p>Aide-mémoires techniques professionnels &copy; 2025 - Michel Grillon</p>
+      </div>
+
+      <!-- ===== NAVIGATION PRINCIPALE (cachée au démarrage) ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="nav" id="navigation" style="display: none">
+        <button class="nav-btn back-btn" onclick="showPage('sommaire')">🏠 Accueil</button>
+        <button class="nav-btn mode-toggle" onclick="toggleEditMode()" id="editModeBtn">✏️ Mode Édition</button>
+        <button class="nav-btn" onclick="exportData()">💾 Exporter</button>
+        <input type="file" id="importFile" accept=".json" style="display: none" onchange="importData(event)">
+        <button class="nav-btn" onclick="document.getElementById('importFile').click()">📂 Importer</button>
+      </div>
+
+      <!-- ===== PAGE SOMMAIRE (page d'accueil) ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page active" id="sommaire">
+        <!-- Barre de recherche globale -->
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Rechercher dans tous les contenus..." onkeyup="globalSearch(this.value)">
+        </div>
+
+        <!-- Grille des cartes du sommaire -->
+        <div class="sommaire-grid">
+          <!-- Carte Calculs -->
+          <div class="sommaire-card">
+            <h3>📐 Calculs</h3>
+            <ul class="sommaire-list">
+              <li onclick="showPage('calcul-barreaudage')">Calcul barreaudage</li>
+              <li onclick="showPage('escalier')">Escalier (Blondel)</li>
+              <li onclick="showPage('pliage-coudage')">Pliage-coudage</li>
+              <li onclick="showPage('developpe-cintrage')">Développé cintrage</li>
+              <li onclick="showPage('vitesse-rotation-percage')">Vitesse rotation de perçage</li>
+            </ul>
+          </div>
+
+          <!-- Carte Soudage -->
+          <div class="sommaire-card">
+            <h3>⚡ Soudage</h3>
+            <ul class="sommaire-list">
+              <li onclick="showPage('calcul-soudage')">Calcul soudage</li>
+              <li onclick="showPage('procedes-soudage')">Procédés soudage</li>
+              <li onclick="showPage('soudure-normalisation')">Soudure normalisation</li>
+            </ul>
+          </div>
+
+          <!-- Carte Tableaux de référence -->
+          <div class="sommaire-card">
+            <h3>📊 Tableaux de références</h3>
+            <ul class="sommaire-list">
+              <li onclick="showPage('vitesses-coupe')">Vitesses de coupe</li>
+              <li onclick="showPage('diametre-percage')">Diamètre perçage</li>
+              <li onclick="showPage('classification-vis')">Classification formes têtes vis</li>
+              <li onclick="showPage('poutrelles')">Poutrelles</li>
+            </ul>
+          </div>
+
+          <!-- Carte Références -->
+          <div class="sommaire-card">
+            <h3>📋 Références</h3>
+            <ul class="sommaire-list">
+              <li onclick="showPage('plan-projections')">Plan (projections européennes)</li>
+              <li onclick="showPage('tolerance-geometrique')">Tolérance géométrique</li>
+              <li onclick="showPage('gueule-loup')">Gueule de loup</li>
+              <li onclick="showPage('escaliers')">Les escaliers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGES CALCULS ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+
+      <!-- ===== PAGE CALCUL BARREAUDAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="calcul-barreaudage">
+        <h2>🔢 Calcul Barreaudage</h2>
+        <p><strong>Répartition régulière de poteaux et barreaux verticaux</strong></p>
+        <div>
+          <br>
+          <p>Calculer le barreaudage d’un ouvrage :</p>
+          <br>
+          <ul>
+            <li>1 :  Je détermine la côte maximale entre barreaux admissible par le DTU => 90 ou 110.</li>
+            <li>2 :  Je calcul le nombre d’intervalles =>  Cote entre tableaux ou poteaux / 110 + 1 ép. de barreaux</li>
+            <li>3 :  Je détermine le nombre de barreaux =>  Nombre d’intervalles - 1</li>
+            <li>4 :  Je calcul la cote cumulé des barreaux =>  Nombres de barreaux X épaisseur de barreaux</li>
+            <li>5 : Je calcul la cote cumulé des intervalles =>  Cote entre tableaux ou poteaux – cote cumulé des barreaux</li>
+            <li>6 :  Je calcul la cote entre barreaux =>  Cote cumulé des intervalles / le nombre d’intervalles</li>
+          </ul>
+          <br>
+          <p><em>Exemple de répartition de barreaux selon le DTU :</em></p>
+          <p>La côte entre poteaux est de 1150 mm, les barreaux sont constitués en fer carré de 12 X 12, démontrer les calculs pour chaque étapes :</p>
+          <p>1: DTU 110 mm</p>
+          <p>2: 1150 / 122 = 9.42 = 10 intervalles</p>
+          <p>3: 10 – 1 = 9 barreaux</p>
+          <p>4: 9 x 12 = 108 mm</p>
+          <p>5: 1150 – 108 = 1042 mm</p>
+          <p>6: 1042 / 10 = 104.2 mm</p>
+          <p>7:  résultat = la cote entre barreaux est de 104.2 mm</p>
+          <br>
+        </div>
+        <h3>Calcul en ligne :</h3>
+        <br>
+        <!-- Étape 1/6 - DTU Maximum -->
+        <div class="step active" id="step1">
+          <div class="step-header">
+            <h3>Étape 1/6 - DTU Maximum</h3>
+          </div>
+          <div class="step-content">
+            <p>Je détermine la côte maximale entre barreaux admissible par le DTU.</p>
+            <div class="form-group">
+              <label for="intervalle">Intervalle entre barreaux (mm) :</label>
+              <select id="intervalle" onchange="updateDTUText()">
+                <option value="110" selected>110 mm (usage adulte)</option>
+                <option value="90">90 mm (écoles maternelles, crèches)</option>
+              </select>
+            </div>
+            <div class="result">
+              <h4>DTU = <span id="dtu-value">110 mm</span></h4>
+            </div>
+            <button class="btn" onclick="nextStep(2)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- Étape 2/6 - Nombre d'intervalles -->
+        <div class="step" id="step2">
+          <div class="step-header">
+            <h3>Étape 2/6 - Nombre d'intervalles</h3>
+          </div>
+          <div class="step-content">
+            <div class="form-group">
+              <label>Côte entre tableaux ou poteaux (mm) :</label>
+              <input type="number" id="cote-poteaux" placeholder="Ex: 1150" onchange="calculateStep2()">
+            </div>
+            <div class="form-group">
+              <label>Épaisseur des barreaux (mm) :</label>
+              <input type="number" id="epaisseur-barreaux" placeholder="Ex: 12" onchange="calculateStep2()">
+            </div>
+            <div class="result" id="result-step2" style="display: none">
+              <h4>Calcul : <span id="calc-step2"></span></h4>
+              <p>Nombre d'intervalles : <span id="nb-intervalles"></span></p>
+            </div>
+            <button class="btn" onclick="prevStep(1)">← Précédent</button>
+            <button class="btn" onclick="nextStep(3)" id="next-step2" style="display: none">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- Étape 3/6 - Nombre de barreaux -->
+        <div class="step" id="step3">
+          <div class="step-header">
+            <h3>Étape 3/6 - Nombre de barreaux</h3>
+          </div>
+          <div class="step-content">
+            <p>Je détermine le nombre de barreaux</p>
+            <div class="result" id="result-step3">
+              <h4>Calcul : <span id="calc-step3"></span></h4>
+              <p>Nombre de barreaux : <span id="nb-barreaux"></span></p>
+            </div>
+            <button class="btn" onclick="prevStep(2)">← Précédent</button>
+            <button class="btn" onclick="nextStep(4)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- Étape 4/6 - Côte cumulée des barreaux -->
+        <div class="step" id="step4">
+          <div class="step-header">
+            <h3>Étape 4/6 - Côte cumulée des barreaux</h3>
+          </div>
+          <div class="step-content">
+            <p>Je calcule la côte cumulée des barreaux</p>
+            <div class="result" id="result-step4">
+              <h4>Calcul : <span id="calc-step4"></span></h4>
+              <p>Côte cumulée barreaux : <span id="cote-cumulee-barreaux"></span> mm</p>
+            </div>
+            <button class="btn" onclick="prevStep(3)">← Précédent</button>
+            <button class="btn" onclick="nextStep(5)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- Étape 5/6 - Côte cumulée des intervalles -->
+        <div class="step" id="step5">
+          <div class="step-header">
+            <h3>Étape 5/6 - Côte cumulée des intervalles</h3>
+          </div>
+          <div class="step-content">
+            <p>Je calcule la côte cumulée des intervalles</p>
+            <div class="result" id="result-step5">
+              <h4>Calcul : <span id="calc-step5"></span></h4>
+              <p>Côte cumulée intervalles : <span id="cote-cumulee-intervalles"></span> mm</p>
+            </div>
+            <button class="btn" onclick="prevStep(4)">← Précédent</button>
+            <button class="btn" onclick="nextStep(6)">Suivant →</button>
+          </div>
+        </div>
+
+        <!-- Étape 6/6 - Côte entre barreaux -->
+        <div class="step" id="step6">
+          <div class="step-header">
+            <h3>Étape 6/6 - Côte entre barreaux</h3>
+          </div>
+          <div class="step-content">
+            <p>Je calcule la côte entre barreaux</p>
+            <div class="result" id="result-step6">
+              <h4>Calcul : <span id="calc-step6"></span></h4>
+              <p><strong>Résultat final : La côte entre barreaux est de <span id="cote-entre-barreaux"></span> mm</strong></p>
+            </div>
+            <button class="btn" onclick="prevStep(5)">← Précédent</button>
+            <button class="btn" onclick="resetBarreaudage()"> 🔄 Nouveau calcul</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE ESCALIER ====== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="escalier">
+        <h2>🪜 Escalier - Loi de Blondel</h2>
+
+        <!-- Section explicative de la loi de Blondel -->
+        <div class="section-info">
+          <h3>Loi de Blondel : 2H + G = 640</h3>
+          <p>G (Giron) = 300 en moyenne</p>
+          <p>Selon l'architecte François Blondel (1618-1686), 2h + g = 63 cm est le meilleur rapport pour monter un escalier en dépensant le moins d'énergie.</p>
+        </div>
+
+        <!-- Image d'illustration pour les escaliers -->
+        <div class="image-container">
+          <img src="images/calculEscalier.jpg" alt="Schéma escalier avec côtes" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Principe de calcul d'un escalier selon Blondel</em></p>
+        </div>
+
+        <!-- Formulaire de calcul escalier -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Hauteur totale (cm) :</label>
+            <input type="number" id="hauteur-totale" placeholder="Ex: 280" onchange="calculateEscalier()">
+          </div>
+
+          <div class="form-group">
+            <label>Giron souhaité (cm) :</label>
+            <input type="number" id="giron-souhaite" placeholder="Ex: 24" value="24" onchange="calculateEscalier()">
+          </div>
+        </div>
+
+        <!-- Résultats du calcul -->
+        <div class="result" id="escalier-result" style="display: none">
+          <h4>Calcul automatique</h4>
+          <p>Hauteur de marche : <span id="hauteur-marche"></span> cm</p>
+          <p>Nombre de marches : <span id="nb-marches"></span></p>
+          <p>Formule 2H + G : <span id="formule-blondel"></span> cm</p>
+          <p>Longueur totale : <span id="longueur-totale"></span> cm</p>
+          <div id="validation-blondel"></div>
+        </div>
+
+        <!-- Tableau d'exemples -->
+        <div class="table-container">
+          <h4>Exemples de calculs</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Hauteur Étages</th>
+                <th>Hauteur Marches</th>
+                <th>Giron</th>
+                <th>2h+g</th>
+                <th>Nb marches</th>
+                <th>Longueur Totale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>260 cm</td>
+                <td>18 cm</td>
+                <td>24 cm</td>
+                <td>60 cm</td>
+                <td>15</td>
+                <td>336 cm</td>
+              </tr>
+              <tr>
+                <td>270 cm</td>
+                <td>20 cm</td>
+                <td>24 cm</td>
+                <td>64 cm</td>
+                <td>14</td>
+                <td>312 cm</td>
+              </tr>
+              <tr>
+                <td>280 cm</td>
+                <td>19 cm</td>
+                <td>24 cm</td>
+                <td>62 cm</td>
+                <td>15</td>
+                <td>336 cm</td>
+              </tr>
+              <tr>
+                <td>290 cm</td>
+                <td>19 cm</td>
+                <td>24 cm</td>
+                <td>62 cm</td>
+                <td>16</td>
+                <td>360 cm</td>
+              </tr>
+              <tr>
+                <td>300 cm</td>
+                <td>18 cm</td>
+                <td>24 cm</td>
+                <td>60 cm</td>
+                <td>17</td>
+                <td>384 cm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== PAGE PLIAGE-COUDAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="pliage-coudage">
+        <h2>📐 Pliage-Coudage</h2>
+        <br>
+        <h3>PLIAGE</h3>
+
+        <!-- Section explicative longueur développée -->
+        <div class="section-warning">
+          <h4>🔍 Longueur développée</h4>
+          <br>
+          <p>Calcul longueur développée :</p>
+          <p><strong>côte ext - épaisseur = côte interne, + addition de toutes les côtes intérieures</strong></p>
+          <p>On ne tiend pas compte de la fn si inférieur 4 mm épaisseur.</p>
+          <p><strong>Puis côte machine : côte extérieure - 1/2 épaisseur ou côte interne + 1/2 épaisseur</strong></p>
+        </div>
+
+        <!-- Section explicative fibre neutre -->
+        <div class="section-warning">
+          <h4>🔍 Fibre neutre (fn)</h4>
+          <p><strong>Ri</strong> = rayon intérieur, <strong>ép</strong> = épaisseur tôle</p>
+          <ul class="list-with-margin">
+            <li><strong>Ri/ép = 1</strong> ⇒ fn 1/3 ép côté intérieur</li>
+            <li><strong>Ri/ép = 2</strong> ⇒ fn 2/5 ép côté intérieur</li>
+            <li><strong>Ri/ép = 3 ou +</strong> ⇒ fn 1/2 ép côté intérieur = fn au milieu</li>
+          </ul>
+        </div>
+
+        <!-- Image d'illustration pour le pliage -->
+        <div class="image-container">
+          <img src="images/Pliage1.jpg" alt="Schéma fibre neutre pliage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p>
+            <em>Position de la fibre neutre selon le rapport Ri/épaisseur</em>
+          </p>
+          <img src="images/Pliage2.jpg" alt="Schéma fibre neutre pliage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Pour les tôles épaisses, la fibre neutre se situe en général : au ⅓ de e si Ri ≤ 3 × e, sinon au milieu de e si Ri > 3 × </em></p>
+          <br>
+          <h4>Calcul des longueurs développées de pliage</h4>
+          <br>
+          <h5>Tôles minces jusqu'à 4 mm d'épaisseur :</h5>
+          <br>
+          <img src="images/Pliage3.jpg" alt="Schéma fibre neutre pliage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Il faut procéder au tracé en prenant les cotes extérieures.</em></p>
+          <p><em>Remarque : On ne tient pas compte de la fibre neutre.</em></p>
+          <br>
+          <h5>Tôles minces supérieures à 4 mm d'épaisseur :</h5>
+          <br>
+          <img src="images/Pliage4.jpg" alt="Schéma fibre neutre pliage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Tenir compte de l'arrondi : calculer son développement en prenant la longueur développée au ⅓ de l'épaisseur.</em></p>
+          <p><em>R = Ri + ⅓ × e si Ri ≤ 4 × e, sinon R = Ri + ½ × e si Ri > 4 × e</em></p>
+          <p><em>La formule unique et valable pour calculer un développé est: 3.14 x R (Ri+ fibre neutre)x angle de pliage le tout divisé par 180</em></p>
+        </div>
+
+        <!-- Formulaire de calcul pliage -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Rayon intérieur Ri (mm) :</label>
+            <input type="number" id="rayon-interieur" placeholder="Ex: 10" onchange="calculatePliage()">
+          </div>
+
+          <div class="form-group">
+            <label>Épaisseur tôle (mm) :</label>
+            <input type="number" id="epaisseur-tole" placeholder="Ex: 3" onchange="calculatePliage()">
+          </div>
+
+          <div class="form-group">
+            <label>Angle de pliage (°) :</label>
+            <input type="number" id="angle-pliage" placeholder="Ex: 90" onchange="calculatePliage()">
+          </div>
+        </div>
+
+        <!-- Résultats du calcul pliage -->
+        <div class="result" id="pliage-result" style="display: none">
+          <h4>Calculs</h4>
+          <p>Rapport Ri/ép : <span id="rapport-ri-ep"></span></p>
+          <p>Position fibre neutre : <span id="position-fn"></span></p>
+          <p>Rayon à la fibre neutre : <span id="rayon-fn"></span> mm</p>
+          <p>Longueur développée : <span id="longueur-dev-pliage"></span> mm</p>
+          <p>Formule : 3.14 × R(fn) × angle / 180</p>
+        </div>
+
+        <!-- Rappels importants -->
+        <div class="section-special">
+          <h4>📝 Rappels importants :</h4>
+          <ul class="list-with-margin">
+            <li>Tôles minces jusqu'à 4 mm d'épaisseur : On ne tient pas compte de la fibre neutre</li>
+            <li>Côte machine = côte extérieure - 1/2 épaisseur</li>
+            <li>Ou côte interne + 1/2 épaisseur</li>
+            <li>R = Ri + ⅓ × e si Ri ≤ 4 × e</li>
+            <li>R = Ri + ½ × e si Ri > 4 × e</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== PAGE DÉVELOPPÉ CINTRAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="developpe-cintrage">
+        <h2>🔄 Développé Cintrage</h2>
+
+        <!-- Section explicative -->
+        <div class="section-success">
+          <h3>Calcul longueur développée</h3>
+          <p><strong>Formule :</strong> Ø - 1/2 épaisseur = Ø fn</p>
+          <p><strong>Pour un cercle :</strong> Ø fn × Pi = longueur développée cercle</p>
+          <p><strong>Cintrage partiel :</strong> (° / 360) × 2 × Pi × r</p>
+        </div>
+
+        <!-- Image d'illustration pour le cintrage -->
+        <div class="image-container">
+          <img src="images/devCintrage.jpg" alt="Calcul développé cintrage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Principe du calcul de longueur développée en cintrage</em></p>
+        </div>
+
+        <!-- Calculateur de cintrage -->
+        <div id="cintrage-calculator">
+          <div class="form-grid-4">
+            <div class="form-group">
+              <label>Épaisseur du profilé (mm) :</label>
+              <input type="number" id="epaisseur-profile" placeholder="Ex: 6" onchange="calculateCintrage()">
+            </div>
+
+            <div class="form-group">
+              <label>Rayon intérieur (mm) :</label>
+              <input type="number" id="rayon-int-cintrage" placeholder="Ex: 600" onchange="calculateCintrage()">
+            </div>
+
+            <div class="form-group">
+              <label>Angle de cintrage (°) :</label>
+              <input type="number" id="angle-cintrage" placeholder="Ex: 180" onchange="calculateCintrage()">
+            </div>
+
+            <div class="form-group">
+              <label>Longueurs droites (mm) :</label>
+              <input type="number" id="longueurs-droites" placeholder="Ex: 100" onchange="calculateCintrage()">
+            </div>
+          </div>
+
+          <!-- Résultats cintrage -->
+          <div class="result" id="cintrage-result" style="display: none">
+            <h4>Résultats</h4>
+            <p>Rayon à la fibre neutre : <span id="rfn-cintrage"></span> mm</p>
+            <p>Longueur développée partie cintrée : <span id="ld-cintree"></span> mm</p>
+            <p>Longueur développée totale : <span id="ld-totale-cintrage"></span> mm</p>
+            <p>Côte machine : <span id="cote-machine"></span> mm</p>
+          </div>
+        </div>
+
+        <!-- Exemple de calcul -->
+        <div class="section-special">
+          <h4>📝 Exemple de calcul :</h4>
+          <p><strong>r = 600, épaisseur = 6</strong></p>
+          <p>Rfn = 600 - 3 = 597 mm</p>
+          <p>Longueur développée = Pi × r = 597 × 3.14 = 1874.58 mm</p>
+          <p>Pour demi-cercle : Pi × Ø × 180 / 360</p>
+        </div>
+      </div>
+
+      <!-- ===== PAGE VITESSE ROTATION PERÇAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="vitesse-rotation-percage">
+        <h2>🔄 Vitesse rotation de perçage</h2>
+
+        <!-- Image d'illustration pour le perçage -->
+        <div class="image-container">
+          <img src="images/vitesseCoupe.jpg" alt="Tableau vitesses de perçage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Guide des vitesses de rotation selon le matériau</em></p>
+        </div>
+
+        <div class="form-group">
+          <label>Formule : R = (1000 × VC) / (3.14159 × D)</label>
+        </div>
+
+        <!-- Formulaire de calcul avec grille responsive -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Métal :</label>
+            <select id="metal-type" onchange="updateVC()">
+              <option value="">Sélectionner...</option>
+              <option value="10">Acier inoxydable (VC=10)</option>
+              <option value="15">Acier Dur (VC=15)</option>
+              <option value="25">Acier Doux (VC=25)</option>
+              <option value="25">Fonte (VC=25)</option>
+              <option value="30">Bronze (VC=30)</option>
+              <option value="45">Laiton (VC=45)</option>
+              <option value="50">Cuivre (VC=50)</option>
+              <option value="80">Aluminium (VC=80)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>VC - Vitesse de coupe (m/min) :</label>
+            <input type="number" id="vitesse-coupe" placeholder="Ex: 25" onchange="calculateRotation()">
+          </div>
+
+          <div class="form-group">
+            <label>D - Ø du foret (mm) :</label>
+            <input type="number" id="diametre-foret" placeholder="Ex: 10" onchange="calculateRotation()">
+          </div>
+        </div>
+
+        <!-- Résultat du calcul -->
+        <div class="result" id="rotation-result" style="display: none">
+          <h4>Résultat</h4>
+          <p>Vitesse de rotation : <span id="vitesse-rotation"></span> tr/min</p>
+          <p>Formule utilisée : R = (1000 × <span id="vc-used"></span>) / (3.14159 × <span id="d-used"></span>)</p>
+        </div>
+
+        <!-- Section rappel affûtage -->
+        <div class="section-special">
+          <h4>📝 Rappel - Affûtage forets :</h4>
+          <ul class="list-with-margin">
+            <li>120° général</li>
+            <li>90° fraisage</li>
+            <li>60° centrage</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== PAGES SOUDAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+
+      <!-- ===== PAGE CALCUL SOUDAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="calcul-soudage">
+        <h2>⚡ Calcul Soudage</h2>
+
+        <!-- Grille des méthodes de soudage -->
+        <div class="info-grid">
+          <!-- Section SAEE/MMA -->
+          <div class="section-light">
+            <h3>🔥 Soudage SAEE (MMA)</h3>
+            <p><strong>Formule :</strong> IA = 50 × (Ø Électrode - 1)</p>
+
+            <div class="form-group">
+              <label>Ø Électrode (mm) :</label>
+              <input type="number" id="diametre-electrode" placeholder="Ex: 2.5" onchange="calculateMMA()">
+            </div>
+
+            <div class="result" id="mma-result" style="display: none">
+              <h4>Intensité recommandée</h4>
+              <p>IA = <span id="intensite-mma"></span> A</p>
+              <p>Longueur de l'arc = <span id="longueur-arc"></span> mm</p>
+            </div>
+
+            <!-- Tableau de référence MMA -->
+            <div class="table-container">
+              <h4>Tableau de référence MMA</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Diamètre</th>
+                    <th>Épaisseur</th>
+                    <th>Ampérage mini</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1.6</td>
+                    <td>1.5</td>
+                    <td>40</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>1.5 → 3</td>
+                    <td>55</td>
+                  </tr>
+                  <tr>
+                    <td>2.5</td>
+                    <td>2.5 → 6</td>
+                    <td>80</td>
+                  </tr>
+                  <tr>
+                    <td>3.2</td>
+                    <td>5 → 8</td>
+                    <td>110</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>8 et +</td>
+                    <td>150</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Section MIG-MAG -->
+          <div class="section-light">
+            <h3>🔥 MIG-MAG</h3>
+            <p><strong>Formules :</strong></p>
+            <p>Intensité = (Tension - 14) × 20</p>
+            <p>Tension = 14 + (0.05 × Intensité)</p>
+
+            <div class="form-group">
+              <label>Tension (V) :</label>
+              <input type="number" id="tension-mig" placeholder="Ex: 20" onchange="calculateMIG()">
+            </div>
+
+            <div class="result" id="mig-result" style="display: none">
+              <h4>Calcul MIG-MAG</h4>
+              <p>Intensité calculée : <span id="intensite-mig"></span> A</p>
+              <p>Vérification tension : <span id="tension-verif"></span> V</p>
+            </div>
+
+            <!-- Gaz de protection -->
+            <div>
+              <h4>📝 Gaz de protection</h4>
+              <p><strong>MAG :</strong> Ar-O2 / Ar-CO2 / Ar-CO2-O2 / CO2</p>
+              <p><strong>MIG :</strong> Argon / Ar-Hé / Hé-Ar / Hélium</p>
+              <p><strong>Réglage débit :</strong> Ø Fil × 10 ou Ø Interne de la buse</p>
+            </div>
+            <div class="image-container">
+              <img src="images/tensions.jpg" alt="Paramètres de soudage 1" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+              <img src="images/tensions2.jpg" alt="Paramètres de soudage 2" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+              <img src="images/tensions3.jpg" alt="Paramètres de soudage 3" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            </div>
+          </div>
+        </div>
+        <br>
+        <!-- TIG -->
+        <div class="section-light">
+          <h4>🔥 TIG</h4>
+          <img src="images/Soudure-Tig.webp" alt="Paramètres de soudage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Guide des paramètres selon le procédé de soudage</em></p>
+          <br>
+          <div>
+            <h5>Quels gaz ?</h5>
+            <br>
+            <ul>
+              <li><strong>Tous les métaux : </strong>Argon</li>
+              <li><strong>Aciers inoxydables (austénitique) :</strong> Argon ou Argon + Hydrogène</li>
+              <li><strong>Alliages d'Aluminium : </strong>Argon ou Argon + Hélium</li>
+              <li><strong>Protection envers des inox : </strong>Argon ou Azote</li>
+            </ul>
+            <br>
+            <h5>Quel débit ?</h5>
+            <br>
+            <p><strong>Débit du gaz = diamètre intérieur de buse (1mm = 1 litre)</strong></p>
+            <p>Choix du diamètre de buse : toujours le plus grand possible</p>
+            <br>
+            <h5>Choix du courant :</h5>
+            <br>
+            <ul>
+              <li><strong>Continu : </strong>Acier, Inox, Cuivre, Titane, Nickel</li>
+              <li><strong>Alternatif : </strong>Alluminium et ses alliages</li>
+            </ul>
+            <br>
+            <h5>Choix intensité :</h5>
+            <br>
+            <ul>
+              <li><strong>Inox : </strong>25 A x épaisseur à souder</li>
+              <li><strong>Acier : </strong> 30 A x épaisseur à souder</li>
+              <li><strong>Alu pur : </strong>40 A x épaisseur à souder</li>
+              <li><strong>AG 5 : </strong>30 A x épaisseur à souder</li>
+              <li><strong>Cuivre : </strong>80 A x épaisseur à souder</li>
+            </ul>
+            <br>
+            <h5>Choix tungstène :</h5>
+            <br>
+            <p>La couleur définit sa composition</p>
+            <ul>
+              <li><strong>gris (WC-20) ou des dorés (WL-15) :</strong> pour acier et inox,</li>
+              <li><strong>vert (WP) : </strong>pour aluminium</li>
+              <li><strong>E3 (terres rares) couleur lilas (violet) et dorées : </strong>pour acier, inox, Alu</li>
+              <li><strong>Courant continu : </strong>tungstène théorié (rouge, WT)</li>
+              <li><strong>Courant alternatif : </strong>tungstène pur (W, Vert)</li>
+            </ul>
+            <div class="image-container">
+              <img src="images/Couleurs-tungstene-affutage.jpg" alt="Couleurrs tungstène et affutage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            </div>
+          </div>
+          <div>
+            <p>Rappel :</p>
+            <br>
+            <p><strong></strong>Affutage entre 30° et 45 °</p>
+          </div>
+          <br>
+          <div>
+            <h5>Préparation des bords</h5>
+            <div class="image-container">
+              <img src="images/preparationsBords.jpg" alt="Préparations de bords" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            </div>
+            <div>
+              <h5>
+                Réglage soudure tig : définition des paramètres de soudage
+              </h5>
+              <div class="image-container">
+                <img src="images/ParametresSoudureTig.webp" alt="Paramètres de soudure TIG" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+              </div>
+              <p>
+                Plus d'informations :
+                <a href="https://vector-welding.fr/reglage-soudure-tig/?srsltid=AfmBOoqL3t-uXCSrJ5XfLDDZUlrqCloBwYFIemNUgz7wwEnMURwXUvf9" target="_blank">Réglage soudure TIG – Les paramètres</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rappels techniques -->
+        <div class="section-border-left">
+          <h4>⚠️ Rappels techniques</h4>
+          <div class="info-grid-small">
+            <div>
+              <h5>Polarités</h5>
+              <p><strong>Directe :</strong> Masse sur "+" et pince sur "-"</p>
+              <p><strong>Indirecte :</strong> Masse sur "-" et pince sur "+"</p>
+            </div>
+            <div>
+              <h5>Enrobages (COBRA)</h5>
+              <p><strong>C</strong>ellulosique, <strong>O</strong>xydant, <strong>B</strong>asique, <strong>R</strong>utile, <strong>A</strong>cide & Spéciaux.</p>
+            </div>
+            <div>
+              <h5>Angles</h5>
+              <p><strong>Soudure plate :</strong> 70°</p>
+              <p><strong>Angulaire :</strong> 70° vertical, 45° horizontal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE PROCÉDÉS SOUDAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="procedes-soudage">
+        <h2>📋 Procédés de Soudage</h2>
+
+        <!-- Barre de recherche -->
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Rechercher un procédé..." onkeyup="filterProcedes(this.value)">
+        </div>
+
+        <!-- Image d'illustration pour les procédés -->
+        <div class="image-container">
+          <img src="images/procedeSoudage.jpg" alt="Différents procédés de soudage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Aperçu des principaux procédés de soudage</em></p>
+        </div>
+
+        <!-- Tableau des procédés -->
+        <div class="table-container">
+          <table id="procedes-table">
+            <thead>
+              <tr>
+                <th>Numéro</th>
+                <th>Sigle</th>
+                <th>Désignation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>111</td>
+                <td>ARC E.E. / SMAW / MMA</td>
+                <td>Soudage à l'arc avec électrodes enrobées</td>
+              </tr>
+              <tr>
+                <td>114</td>
+                <td>FIL FOURRÉ SANS GAZ / INNERSHIELD</td>
+                <td>Soudage à l'arc avec fil électrode fourré sans gaz</td>
+              </tr>
+              <tr>
+                <td>131</td>
+                <td>MIG / GMAW</td>
+                <td>
+                  Soudage à l'arc en atmosphère inerte avec fil électrode
+                  fusible
+                </td>
+              </tr>
+              <tr>
+                <td>135</td>
+                <td>MAG / GMAW</td>
+                <td>
+                  Soudage à l'arc en atmosphère active avec fil électrode
+                  fusible
+                </td>
+              </tr>
+              <tr>
+                <td>136</td>
+                <td>FIL FOURRÉ AVEC GAZ / FCAW</td>
+                <td>
+                  Soudage à l'arc en atmosphère active avec fil électrode fourré
+                </td>
+              </tr>
+              <tr>
+                <td>141</td>
+                <td>TIG / GTAW</td>
+                <td>
+                  Soudage à l'arc en atmosphère inerte avec électrode de
+                  tungstène
+                </td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>PLASMA / PAW</td>
+                <td>Soudage à l'arc électrique au plasma</td>
+              </tr>
+              <tr>
+                <td>21</td>
+                <td>POINT / RSW</td>
+                <td>Soudage par résistance par point</td>
+              </tr>
+              <tr>
+                <td>22</td>
+                <td>MOLETTE / RSEW</td>
+                <td>Soudage par résistance à la molette</td>
+              </tr>
+              <tr>
+                <td>23</td>
+                <td>BOSSAGE / RPW</td>
+                <td>Soudage par résistance par bossage</td>
+              </tr>
+              <tr>
+                <td>24</td>
+                <td>ÉTINCELAGE / FW</td>
+                <td>Soudage en bout par étincelage</td>
+              </tr>
+              <tr>
+                <td>311</td>
+                <td>OXYA / OAW</td>
+                <td>Soudage au chalumeau avec flamme oxyacétylénique</td>
+              </tr>
+              <tr>
+                <td>52</td>
+                <td>LASER / LBW</td>
+                <td>Soudage par faisceau laser</td>
+              </tr>
+              <tr>
+                <td>781</td>
+                <td>GOUJON / SW</td>
+                <td>Soudage à l'arc de goujons</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== PAGE SOUDURE NORMALISATION ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="soudure-normalisation">
+        <h2>📐 Soudure - Normalisation</h2>
+
+        <!-- Section explicative -->
+        <div class="section-info">
+          <h3>📏 Éléments de cotation</h3>
+          <p>Les symboles de soudure permettent de définir précisément les caractéristiques des cordons sur les plans techniques.</p>
+        </div>
+
+        <!-- Image d'illustration pour la normalisation -->
+        <div class="image-container">
+          <img src="images/elementsCotation.jpg" alt="Symboles de soudure normalisés" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Principaux symboles de soudure selon la norme</em></p>
+        </div>
+
+        <!-- Grille des symboles -->
+        <div class="info-grid">
+          <div class="section-light">
+            <h4>🔺 Symboles élémentaires</h4>
+            <div class="image-container">
+              <img src="images/positionSymbolesElementaires.jpg" alt="Symboles élémentaires de soudure normalisés" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+              <p><em>Principaux symboles de soudure selon la norme</em></p>
+            </div>
+          </div>
+
+          <div class="section-light">
+            <h4>🔄 Soudure périphérique</h4>
+            <div class="image-container">
+              <img src="images/soudurePeripherique.jpg" alt="Symboles de soudure périphérique normalisés" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+              <p><em>Principaux symboles de soudure périphérique</em></p>
+            </div>
+          </div>
+
+          <div class="section-light">
+            <h4>🏗️ Soudure au chantier</h4>
+            <div class="image-container">
+              <img src="images/soudureChantier.jpg" alt="Symboles de soudure normalisés" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+              <p><em>Principaux symboles de soudure de chantier</em></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Position des symboles -->
+        <div class="section-success">
+          <h4>📍 Position des symboles élémentaires</h4>
+          <div class="text-center">
+            <svg width="300" height="100" class="svg-container">
+              <line x1="50" y1="50" x2="250" y2="50" stroke="#60a5fa" stroke-width="2"/>
+              <polygon points="40,45 40,55 50,50" fill="#60a5fa" />
+              <text x="60" y="35" fill="#f8fafc" font-size="12">Côté flèche = soudure visible</text>
+              <text x="60" y="70" fill="#f8fafc" font-size="12">Côté opposé = soudure cachée</text>
+            </svg>
+          </div>
+          <div class="image-container">
+            <img src="images/SymbolesElementaires.jpg" alt="Symboles élémentaires de soudure normalisés" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            <p><em>Principaux symboles de soudure selon la norme</em></p>
+          </div>
+        </div>
+
+        <!-- Cotation des cordons -->
+        <div class="section-warning">
+          <h4>📏 Cotation des cordons de soudure</h4>
+          <p>Les dimensions et caractéristiques des cordons sont indiquées selon des règles précises :</p>
+          <ul class="list-with-margin">
+            <li>Gorge effective (a)</li>
+            <li>Longueur utile (l)</li>
+            <li>Longueur totale</li>
+            <li>Pas de soudure discontinue</li>
+          </ul>
+          <div class="image-container">
+            <img src="images/cotationCordon.jpg" alt="Cotations des cordons" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            <p><em>Principaux symboles de soudure selon la norme</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGES  TABLEAUX DE REFERENCES ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+
+      <!-- ===== PAGE VITESSE DE COUPE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="vitesses-coupe">
+        <h2>⚡ Vitesse de Coupe</h2>
+
+        <!-- Barre de recherche -->
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Rechercher par Vc ou Ø..." onkeyup="filterVitesseCoupe(this.value)">
+        </div>
+
+        <!-- Vitesse max -->
+        <div class="section-warning">
+          <p><strong>V max :</strong> 6000 tr/mn</p>
+          <br>
+          <p>La vitesse de coupe est la distance parcourue en une minute, par un point situé sur le listel du foret. Elle est exprimée en m/min. Elle est fonction du matériau percé, de la qualité du foret et de la lubrification.</p>
+          <br>
+          <ul>
+            <li>Pour un acier S235 la vitesse indicative est comprise entre 20 à 40 m/min</li>
+            <li>Pour un acier S355 la vitesse indicative est comprise entre 23 à 30 m/min</li>
+            <li>Pour une fonte la vitesse indicative est comprise entre 12 à 18 m/min</li>
+            <li>Pour un acier inox austénitique la vitesse indicative est comprise entre 10 à 20 m/min</li>
+            <li>Pour un aluminium et ses alliages la vitesse indicative est comprise entre 30 à 60 m/min</li>
+            <li>Pour un cuivre et ses alliages la vitesse indicative est comprise entre 30 à 60 m/min</li>
+          </ul>
+          <br>
+          <p>RAPPEL :</p>
+          <br>
+          <img src="images/anglesForet.jpg" alt="Angles des forêts" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p>Affûtage des forets</p>
+          <p>L’angle de dépouille de 1° à 10°, permet au foret de ne pas talonner.</p>
+          <p>L’angle de pointe influe sur la facilité de pénétration. Il varie en fonction de la matière à percer.</p>
+          <ul>
+            <li>120° pour l’acier doux,</li>
+            <li>90° pour le laiton,</li>
+            <li>135° pour l’aluminium,</li>
+            <li>135° pour les aciers inoxydables</li>
+          </ul>
+        </div>
+
+        <!-- Image d'illustration pour vitesse de coupe -->
+        <div class="image-container">
+          <img src="images/vitesseCoupe.jpg" alt="Tableau vitesses de perçage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Guide des vitesses de rotation selon le matériau</em></p>
+        </div>
+
+        <!-- Tableau principal -->
+        <div class="table-container">
+          <table id="vitesse-coupe-table">
+            <thead>
+              <tr>
+                <th>Vc m/mn</th>
+                <th>Ø 3</th>
+                <th>Ø 4</th>
+                <th>Ø 5</th>
+                <th>Ø 6</th>
+                <th>Ø 8</th>
+                <th>Ø 10</th>
+                <th>Ø 12</th>
+                <th>Ø 16</th>
+                <th>Ø 20</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10</td>
+                <td>1062</td>
+                <td>796</td>
+                <td>637</td>
+                <td>531</td>
+                <td>398</td>
+                <td>318</td>
+                <td>265</td>
+                <td>199</td>
+                <td>159</td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>2123</td>
+                <td>1592</td>
+                <td>1274</td>
+                <td>1062</td>
+                <td>796</td>
+                <td>637</td>
+                <td>531</td>
+                <td>398</td>
+                <td>318</td>
+              </tr>
+              <tr>
+                <td>30</td>
+                <td>3185</td>
+                <td>2389</td>
+                <td>1911</td>
+                <td>1592</td>
+                <td>1194</td>
+                <td>955</td>
+                <td>796</td>
+                <td>597</td>
+                <td>478</td>
+              </tr>
+              <tr>
+                <td>40</td>
+                <td>4246</td>
+                <td>3185</td>
+                <td>2548</td>
+                <td>2123</td>
+                <td>1592</td>
+                <td>1274</td>
+                <td>1062</td>
+                <td>796</td>
+                <td>637</td>
+              </tr>
+              <tr>
+                <td>50</td>
+                <td>5308</td>
+                <td>3981</td>
+                <td>3185</td>
+                <td>2654</td>
+                <td>1990</td>
+                <td>1592</td>
+                <td>1327</td>
+                <td>995</td>
+                <td>796</td>
+              </tr>
+              <tr>
+                <td>60</td>
+                <td>6369</td>
+                <td>4777</td>
+                <td>3822</td>
+                <td>3185</td>
+                <td>2389</td>
+                <td>1911</td>
+                <td>1592</td>
+                <td>1194</td>
+                <td>955</td>
+              </tr>
+              <tr>
+                <td>70</td>
+                <td>7431</td>
+                <td>5573</td>
+                <td>4459</td>
+                <td>3715</td>
+                <td>2787</td>
+                <td>2229</td>
+                <td>1858</td>
+                <td>1393</td>
+                <td>1115</td>
+              </tr>
+              <tr>
+                <td>80</td>
+                <td>8493</td>
+                <td>6369</td>
+                <td>5096</td>
+                <td>4246</td>
+                <td>3185</td>
+                <td>2548</td>
+                <td>2123</td>
+                <td>1592</td>
+                <td>1274</td>
+              </tr>
+              <tr>
+                <td>90</td>
+                <td>9554</td>
+                <td>7166</td>
+                <td>5732</td>
+                <td>4777</td>
+                <td>3583</td>
+                <td>2866</td>
+                <td>2389</td>
+                <td>1791</td>
+                <td>1433</td>
+              </tr>
+              <tr>
+                <td>100</td>
+                <td>10616</td>
+                <td>7962</td>
+                <td>6369</td>
+                <td>5308</td>
+                <td>3981</td>
+                <td>3185</td>
+                <td>2654</td>
+                <td>1990</td>
+                <td>1592</td>
+              </tr>
+              <tr>
+                <td>110</td>
+                <td>11677</td>
+                <td>8758</td>
+                <td>7006</td>
+                <td>5839</td>
+                <td>4379</td>
+                <td>3503</td>
+                <td>2919</td>
+                <td>2189</td>
+                <td>1752</td>
+              </tr>
+              <tr>
+                <td>120</td>
+                <td>12739</td>
+                <td>9554</td>
+                <td>7643</td>
+                <td>6369</td>
+                <td>4777</td>
+                <td>3822</td>
+                <td>3185</td>
+                <td>2389</td>
+                <td>1911</td>
+              </tr>
+              <tr>
+                <td>130</td>
+                <td>13800</td>
+                <td>10350</td>
+                <td>8280</td>
+                <td>6900</td>
+                <td>5175</td>
+                <td>4140</td>
+                <td>3450</td>
+                <td>2588</td>
+                <td>2070</td>
+              </tr>
+              <tr>
+                <td>140</td>
+                <td>14862</td>
+                <td>11146</td>
+                <td>8917</td>
+                <td>7431</td>
+                <td>5573</td>
+                <td>4459</td>
+                <td>3715</td>
+                <td>2787</td>
+                <td>2229</td>
+              </tr>
+              <tr>
+                <td>150</td>
+                <td>15924</td>
+                <td>11943</td>
+                <td>9554</td>
+                <td>7962</td>
+                <td>5971</td>
+                <td>4777</td>
+                <td>3981</td>
+                <td>2986</td>
+                <td>2389</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tableaux avance par dent -->
+        <div style="margin-top: 30px">
+          <h3>📊 Tableaux avance par dent</h3>
+
+          <div class="table-grid">
+            <div>
+              <h4>1 dent (max 50 mm/s)</h4>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>tr/mn</th>
+                      <th>0.05</th>
+                      <th>0.1</th>
+                      <th>0.15</th>
+                      <th>0.2</th>
+                      <th>0.3</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1000</td>
+                      <td>1</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>3</td>
+                      <td>5</td>
+                    </tr>
+                    <tr>
+                      <td>1500</td>
+                      <td>1</td>
+                      <td>3</td>
+                      <td>4</td>
+                      <td>5</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>2000</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>5</td>
+                      <td>7</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td>3000</td>
+                      <td>3</td>
+                      <td>5</td>
+                      <td>8</td>
+                      <td>10</td>
+                      <td>15</td>
+                    </tr>
+                    <tr>
+                      <td>4000</td>
+                      <td>3</td>
+                      <td>7</td>
+                      <td>10</td>
+                      <td>13</td>
+                      <td>20</td>
+                    </tr>
+                    <tr>
+                      <td>6000</td>
+                      <td>5</td>
+                      <td>10</td>
+                      <td>15</td>
+                      <td>20</td>
+                      <td>30</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h4>2 dents</h4>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>tr/mn</th>
+                      <th>0.05</th>
+                      <th>0.1</th>
+                      <th>0.15</th>
+                      <th>0.2</th>
+                      <th>0.3</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1000</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>5</td>
+                      <td>7</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td>2000</td>
+                      <td>3</td>
+                      <td>7</td>
+                      <td>10</td>
+                      <td>13</td>
+                      <td>20</td>
+                    </tr>
+                    <tr>
+                      <td>3000</td>
+                      <td>5</td>
+                      <td>10</td>
+                      <td>15</td>
+                      <td>20</td>
+                      <td>30</td>
+                    </tr>
+                    <tr>
+                      <td>4000</td>
+                      <td>7</td>
+                      <td>13</td>
+                      <td>20</td>
+                      <td>27</td>
+                      <td>40</td>
+                    </tr>
+                    <tr>
+                      <td>6000</td>
+                      <td>10</td>
+                      <td>20</td>
+                      <td>30</td>
+                      <td>40</td>
+                      <td>60</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE DIAMÈTRE PERÇAGE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="diametre-percage">
+        <h2>🔩 Diamètre Perçage</h2>
+
+        <!-- Barre de recherche -->
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Rechercher M1, M10, etc..." onkeyup="filterDiametrePercage(this.value)">
+        </div>
+
+        <!-- Formule -->
+        <div class="section-info">
+          <p><strong>Formule :</strong> Ø Perçage (mm) = M - Pas nominal</p>
+        </div>
+
+        <!-- Image d'illustration pour diamètre perçage -->
+        <div class="image-container">
+          <img src="images/tarauds.jpg" alt="Guide taraudage et perçage" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Correspondance diamètres de perçage pour taraudage</em></p>
+        </div>
+
+        <!-- Tableau principal -->
+        <div class="table-container">
+          <table id="diametre-percage-table">
+            <thead>
+              <tr>
+                <th>M</th>
+                <th>Pas Nominal</th>
+                <th>Ø Perçage (mm)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>M 1</td>
+                <td>0.25</td>
+                <td>0.75</td>
+              </tr>
+              <tr>
+                <td>M 1.1</td>
+                <td>0.25</td>
+                <td>0.85</td>
+              </tr>
+              <tr>
+                <td>M 1.2</td>
+                <td>0.25</td>
+                <td>0.95</td>
+              </tr>
+              <tr>
+                <td>M 1.4</td>
+                <td>0.3</td>
+                <td>1.1</td>
+              </tr>
+              <tr>
+                <td>M 1.6</td>
+                <td>0.35</td>
+                <td>1.25</td>
+              </tr>
+              <tr>
+                <td>M 1.8</td>
+                <td>0.35</td>
+                <td>1.45</td>
+              </tr>
+              <tr>
+                <td>M 2</td>
+                <td>0.4</td>
+                <td>1.6</td>
+              </tr>
+              <tr>
+                <td>M 2.2</td>
+                <td>0.45</td>
+                <td>1.75</td>
+              </tr>
+              <tr>
+                <td>M 2.5</td>
+                <td>0.45</td>
+                <td>2.05</td>
+              </tr>
+              <tr>
+                <td>M 3</td>
+                <td>0.5</td>
+                <td>2.5</td>
+              </tr>
+              <tr>
+                <td>M 3.5</td>
+                <td>0.6</td>
+                <td>2.9</td>
+              </tr>
+              <tr>
+                <td>M 4</td>
+                <td>0.7</td>
+                <td>3.3</td>
+              </tr>
+              <tr>
+                <td>M 4.5</td>
+                <td>0.75</td>
+                <td>3.7</td>
+              </tr>
+              <tr>
+                <td>M 5</td>
+                <td>0.8</td>
+                <td>4.2</td>
+              </tr>
+              <tr>
+                <td>M 6</td>
+                <td>1</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>M 7</td>
+                <td>1</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>M 8</td>
+                <td>1.25</td>
+                <td>6.8</td>
+              </tr>
+              <tr>
+                <td>M 9</td>
+                <td>1.25</td>
+                <td>7.8</td>
+              </tr>
+              <tr>
+                <td>M 10</td>
+                <td>1.5</td>
+                <td>8.5</td>
+              </tr>
+              <tr>
+                <td>M 11</td>
+                <td>1.5</td>
+                <td>9.5</td>
+              </tr>
+              <tr>
+                <td>M 12</td>
+                <td>1.75</td>
+                <td>10.2</td>
+              </tr>
+              <tr>
+                <td>M 14</td>
+                <td>2</td>
+                <td>12</td>
+              </tr>
+              <tr>
+                <td>M 16</td>
+                <td>2</td>
+                <td>14</td>
+              </tr>
+              <tr>
+                <td>M 18</td>
+                <td>2.5</td>
+                <td>15.5</td>
+              </tr>
+              <tr>
+                <td>M 20</td>
+                <td>2.5</td>
+                <td>17.5</td>
+              </tr>
+              <tr>
+                <td>M 22</td>
+                <td>2.5</td>
+                <td>19.5</td>
+              </tr>
+              <tr>
+                <td>M 24</td>
+                <td>3</td>
+                <td>21</td>
+              </tr>
+              <tr>
+                <td>M 27</td>
+                <td>3</td>
+                <td>24</td>
+              </tr>
+              <tr>
+                <td>M 30</td>
+                <td>3.5</td>
+                <td>26.5</td>
+              </tr>
+              <tr>
+                <td>M 33</td>
+                <td>3.5</td>
+                <td>29.5</td>
+              </tr>
+              <tr>
+                <td>M 36</td>
+                <td>4</td>
+                <td>32</td>
+              </tr>
+              <tr>
+                <td>M 39</td>
+                <td>4</td>
+                <td>35</td>
+              </tr>
+              <tr>
+                <td>M 42</td>
+                <td>4.5</td>
+                <td>37.5</td>
+              </tr>
+              <tr>
+                <td>M 45</td>
+                <td>4.5</td>
+                <td>40.5</td>
+              </tr>
+              <tr>
+                <td>M 48</td>
+                <td>5</td>
+                <td>43</td>
+              </tr>
+              <tr>
+                <td>M 52</td>
+                <td>5</td>
+                <td>47</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Liens utiles -->
+        <div class="section-special">
+          <p><strong>📍 Liens utiles :</strong></p>
+          <p><a href="https://www.coquedenoix.fr/boite-a-outils/diametre-de-percage-pour-taraudage/" target="_blank">• https://www.coquedenoix.fr/boite-a-outils/diametre-de-percage-pour-taraudage/</a></p>
+          <p><a href="https://www.technocalcul.com/FR/dimensions_vis.html" target="_blank">• https://www.technocalcul.com/FR/dimensions_vis.html</a></p>
+        </div>
+      </div>
+
+      <!-- ===== PAGE CLASSIFICATION VIS ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="classification-vis">
+        <h2>🔩 Classification Formes Têtes Vis</h2>
+
+        <!-- Barre de recherche -->
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Rechercher H, C, HC, BTR, Torx..." onkeyup="filterClassificationVis(this.value)">
+        </div>
+
+        <!-- Image d'illustration pour classification vis -->
+        <div class="image-container">
+          <img src="images/teteVis.jpg" alt="Classification des têtes de vis" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Différents types de têtes et empreintes de vis</em></p>
+        </div>
+
+        <!-- Grille des classifications -->
+        <div class="info-grid">
+          <div class="section-light">
+            <h3>🔧 Entraînement externe</h3>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>H</td>
+                    <td>Hexagonal</td>
+                    <td>Construction mécanique</td>
+                  </tr>
+                  <tr>
+                    <td>C</td>
+                    <td>Cylindrique</td>
+                    <td>Construction mécanique</td>
+                  </tr>
+                  <tr>
+                    <td>-</td>
+                    <td>Six lobes externes</td>
+                    <td>Vis de bandages</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="section-light">
+            <h3>🔩 Empreintes</h3>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Type</th>
+                    <th>Usage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>HC</td>
+                    <td>Six pans creux (BTR/Allen)</td>
+                    <td>Construction mécanique</td>
+                  </tr>
+                  <tr>
+                    <td>X</td>
+                    <td>Six lobes internes (Torx)</td>
+                    <td>Vissage automatique</td>
+                  </tr>
+                  <tr>
+                    <td>Z</td>
+                    <td>Cruciforme (Pozidriv)</td>
+                    <td>Vissage automatique</td>
+                  </tr>
+                  <tr>
+                    <td>H</td>
+                    <td>Cruciforme (Phillips)</td>
+                    <td>Standard</td>
+                  </tr>
+                  <tr>
+                    <td>S</td>
+                    <td>Fente (pièce monnaie)</td>
+                    <td>Grand public</td>
+                  </tr>
+                  <tr>
+                    <td>Q</td>
+                    <td>Carré (Robertson)</td>
+                    <td>Spécialisé</td>
+                  </tr>
+                  <tr>
+                    <td>TS</td>
+                    <td>TooSpeed</td>
+                    <td>Multi-compatible</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="section-light">
+            <h3>⚡ Multi-entraînement</h3>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>HS</td>
+                    <td>Hexagonal fendu</td>
+                  </tr>
+                  <tr>
+                    <td>HCS</td>
+                    <td>Six pans creux fendu</td>
+                  </tr>
+                  <tr>
+                    <td>ZS</td>
+                    <td>Cruciforme fendu</td>
+                  </tr>
+                  <tr>
+                    <td>XS</td>
+                    <td>Six lobes fendu</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="section-light">
+            <h3>🔒 Spéciaux</h3>
+            <ul class="list-indented">
+              <li><strong>Aster1 :</strong> Cinq lobes creux (aéronautique)</li>
+              <li><strong>Pentalobe :</strong> Exclusif Apple</li>
+              <li><strong>Triangulaire :</strong> Sécurité</li>
+              <li><strong>Indévissable :</strong> Sens unique (menuiserie ext.)</li>
+              <li><strong>"Antivol" :</strong> Formes brevetées (mobilier urbain)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Types de têtes -->
+        <div class="section-border-left">
+          <h4>📝 Types de têtes de vis</h4>
+          <p>Indépendamment du système d'entraînement, il existe plusieurs formes :</p>
+          <ul class="list-with-margin">
+            <li>Vis à tête fraisée et plate</li>
+            <li>Vis à tête fraisée bombée</li>
+            <li>Vis à tête bombée</li>
+            <li>Vis à tête cylindrique</li>
+            <li>Vis à tête plate</li>
+            <li>Vis trompette</li>
+          </ul>
+          <p style="margin-top: 15px"><strong>TooSpeed :</strong> Accepte cinq tournevis : fendu, cruciforme, Pozidriv, carré et TooSpeed</p>
+        </div>
+      </div>
+
+      <!-- ===== PAGE POUTRELLES ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="poutrelles">
+        <h2>🏗️ Poutrelles</h2>
+
+        <!-- Barre de recherche -->
+        <div class="search-box">
+          <input type="text" placeholder="🔍 Rechercher IPE, IPN, HE, UPN..." onkeyup="filterPoutrelles(this.value)">
+        </div>
+
+        <!-- Section principale -->
+        <div class="section-info">
+          <h3>🔧 Profilés laminés à chaud - I, H, U, L</h3>
+          <p>Guide complet des poutrelles et profilés métalliques</p>
+        </div>
+
+        <!-- Image d'illustration pour poutrelles -->
+        <div class="image-container">
+          <img src="images/ipn.webp" alt="Différents types de poutrelles" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+        </div>
+
+        <!-- Contenu poutrelles -->
+        <div id="poutrelles-content">
+          <div class="info-grid">
+            <div class="section-light">
+              <h4>📐 Profilés en I</h4>
+              <div class="image-container">
+                <img src="images/ip.jpg" alt="ip" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+                <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+              </div>
+              <div style="margin: 15px 0">
+                <h5>IPE - Poutrelles I européennes</h5>
+                <p>Profilé à ailes parallèles d'épaisseur constante. Caractéristiques mécaniques équivalentes, mais plus légers que les profilés IPN et permettent des raccords plus faciles.</p>
+              </div>
+              <div style="margin: 15px 0">
+                <h5>IPN - Poutrelles normales européennes</h5>
+                <p>Le profilé IPN se distingue du profilé IPE par ses ailes inclinées.</p>
+              </div>
+            </div>
+
+            <div class="section-light">
+              <h4>🏛️ Profilés en H</h4>
+              <div class="image-container">
+                <img src="images/h.jpg" alt="h" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+                <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+              </div>
+              <div style="margin: 15px 0">
+                <h5>HE-HL-HD-HP</h5>
+                <ul class="list-indented">
+                  <li><strong>HE :</strong> Profilé à larges ailes parallèles</li>
+                  <li><strong>HL :</strong> Ailes plus larges, hauteur minimum requise</li>
+                  <li><strong>HD :</strong> Profilé spécial pour colonnes</li>
+                  <li><strong>HP :</strong> Applications en fondation, palplanches</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="section-light">
+              <h4>🔧 Profilés en U</h4>
+              <div class="image-container">
+                <img src="images/u.jpg" alt="u" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+                <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+              </div>
+              <div style="margin: 15px 0">
+                <h5>UPE - UPN</h5>
+                <p><strong>UPE :</strong> Profilé en U à ailes parallèles d'épaisseur constante.</p>
+                <p><strong>UPN :</strong> Se distingue du profilé UPE par ses ailes inclinées.</p>
+                <p>Disponibles pour faibles hauteurs.</p>
+              </div>
+            </div>
+
+            <div class="section-light">
+              <h4>📐 Profilés en L (cornières)</h4>
+              <div class="image-container">
+                <img src="images/l.jpg" alt="l" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+                <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+              </div>
+              <div style="margin: 15px 0">
+                <p><strong>Cornières :</strong> À ailes égales ou inégales</p>
+                <p>Utilisées pour les structures d'assemblage et de renforcement.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Poutrelles spéciales -->
+          <div class="section-success">
+            <h4>🏢 Poutrelles spéciales</h4>
+
+            <div style="margin: 20px 0">
+              <h5>IFB - Integrated Floor Beams</h5>
+              <div class="image-container">
+                <img src="images/ifb.jpg" alt="ifb" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+                <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+              </div>
+              <p>Ces poutrelles présentent des ailes extra-larges soudées sur la partie inférieure. Cela permet de placer facilement des éléments de plancher.</p>
+              <ul class="list-indented">
+                <li><strong>Type A :</strong> Fabriquées au départ de demi-poutrelles IPE ou HE</li>
+                <li><strong>Type B :</strong> Réalisées à l'aide de demi-poutrelles HP</li>
+              </ul>
+            </div>
+
+            <div style="margin: 20px 0">
+              <h5>SFB - Slim Floor Beam</h5>
+              <div class="image-container">
+                <img src="images/sfb.jpg" alt="sfb" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+                <p><em>Comparatif des profils IPE, IPN, HE et UPN</em></p>
+              </div>
+              <p>Ces poutrelles sont réalisées en soudant une tôle rapportée en plus sous la semelle d'une poutrelle HEB ou HEM.</p>
+              <p><strong>Disponible :</strong> de HEB 140 à HEB 320</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGES REFERENCES ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+
+      <!-- ===== PAGE PLAN PROJECTIONS ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="plan-projections">
+        <h2>📐 Plan - Projections Européennes</h2>
+
+        <!-- Section explicative -->
+        <div class="section-info">
+          <h3>🇪🇺 Convention européenne (ou projection européenne)</h3>
+          <p>La vue de dessus est placée sous la vue de face, la vue de droite, à gauche de la vue de face... Ce qui revient, entre deux vues, à faire « rouler » la pièce au-dessus du plan sur lequel elle est censée être posée.</p>
+        </div>
+
+        <!-- Image d'illustration pour projections -->
+        <div class="image-container">
+          <img src="images/plan.jpg" alt="Schéma projections européennes" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Disposition des vues selon la convention européenne</em></p>
+        </div>
+
+        <!-- Logique des projections -->
+        <div class="section-success">
+          <h4>💡 Logique des projections</h4>
+          <p>La convention européenne correspond à la logique des projections : ce qui est vu « de droite » (depuis la droite) se projette à gauche, et donc se dessine à gauche, etc.</p>
+          <p>Cette méthode permet une représentation cohérente et standardisée des pièces techniques dans le dessin industriel.</p>
+        </div>
+      </div>
+
+      <!-- ===== PAGE TOLÉRANCE GÉOMÉTRIQUE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="tolerance-geometrique">
+        <h2>📏 Tolérance Géométrique</h2>
+
+        <!-- Définitions -->
+        <div class="section-warning">
+          <h3>🔢 Définitions</h3>
+          <div class="info-grid-small">
+            <div>
+              <h4>S = Acier de construction courant</h4>
+              <h4>235 = Limite élasticité en Méga Pascal</h4>
+            </div>
+            <div>
+              <h4>Tolérance géométrique = Côte nominale</h4>
+              <p>(exemple: 51)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image d'illustration pour tolérances -->
+        <div class="image-container">
+          <img src="images/Tolerance.png" alt="Exemple de tolérances géométriques" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Application des tolérances sur une pièce technique</em></p>
+        </div>
+
+        <!-- Exemple de calcul -->
+        <div class="section-light">
+          <h4>📊 Exemple de calcul</h4>
+          <div class="text-center">
+            <div class="calc-example">
+              <h5>Côte nominale: 51</h5>
+            </div>
+          </div>
+
+          <div class="tolerance-grid">
+            <div class="calc-max">
+              <h5>Maximum</h5>
+              <p>+1 → 52</p>
+            </div>
+            <div class="calc-min">
+              <h5>Minimum</h5>
+              <p>-2 → 49</p>
+            </div>
+          </div>
+
+          <div class="calc-result">
+            <h5>Intervalle = 3</h5>
+            <p>(Addition du max + mini)</p>
+          </div>
+        </div>
+
+        <!-- Applications pratiques -->
+        <div class="section-success">
+          <h4>🎯 Applications pratiques</h4>
+          <p>Les tolérances géométriques définissent les limites acceptables de variation dimensionnelle dans la fabrication de pièces métalliques. Elles garantissent : </p>
+          <ul class="list-with-margin">
+            <li>L'interchangeabilité des pièces</li>
+            <li>La qualité d'assemblage</li>
+            <li>Le respect des contraintes mécaniques</li>
+            <li>La conformité aux normes industrielles</li>
+          </ul>
+          <div class="image-container">
+            <img src="images/tolerance1.jpg" alt="tolérance géométrique 1" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            <p><em>tolérance géométrique 1</em></p>
+          </div>
+          <div class="image-container">
+            <img src="images/tolerance2.jpg" alt="tolérance géométrique 2" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+            <p><em>tolérance géométrique 2</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE GUEULE DE LOUP ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+      <div class="page" id="gueule-loup">
+        <h2>🐺 Gueule de Loup</h2>
+
+        <!-- Définition -->
+        <div class="section-warning">
+          <h3>🔧 Définition</h3>
+          <p>La gueule de loup est une technique de découpe utilisée en métallerie pour réaliser des assemblages précis entre profilés, notamment pour les tubes et poutrelles.</p>
+        </div>
+
+        <!-- Image d'illustration pour gueule de loup -->
+        <div class="image-container">
+          <img src="images/gueuleLoup.jpg" alt="Exemple de gueule de loup" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+          <p><em>Assemblage par gueule de loup sur tubes ronds</em></p>
+        </div>
+
+        <!-- Grille des informations -->
+        <div class="info-grid">
+          <div class="section-light">
+            <h4>📐 Principe</h4>
+            <p>La gueule de loup consiste à découper l'extrémité d'un tube ou profilé selon un profil courbe ou angulaire qui épouse parfaitement la forme du tube récepteur.</p>
+            <h5 style="margin-top: 15px">Applications :</h5>
+            <ul class="list-indented">
+              <li>Assemblages de tubes ronds</li>
+              <li>Raccords de poutrelles</li>
+              <li>Structures de charpente métallique</li>
+              <li>Garde-corps et rampes</li>
+            </ul>
+          </div>
+
+          <div class="section-light">
+            <h4>🛠️ Techniques de réalisation</h4>
+            <h5>Méthodes de découpe :</h5>
+            <ul class="list-indented">
+              <li><strong>Plasma :</strong> Précision élevée, finition soignée</li>
+              <li><strong>Oxycoupage :</strong> Pour épaisseurs importantes</li>
+              <li><strong>Scie :</strong> Découpe manuelle traditionnelle</li>
+              <li><strong>Laser :</strong> Précision maximale</li>
+            </ul>
+          </div>
+
+          <div class="section-light">
+            <h4>📏 Points clés</h4>
+            <ul class="list-indented">
+              <li>Tracé précis obligatoire</li>
+              <li>Respect des angles d'assemblage</li>
+              <li>Préparation des chanfreins pour soudure</li>
+              <li>Contrôle dimensionnel avant soudage</li>
+            </ul>
+          </div>
+
+          <div class="section-light">
+            <h4>⚠️ Recommandations</h4>
+            <ul class="list-indented">
+              <li>Utiliser un gabarit pour tubes identiques</li>
+              <li>Prévoir un jeu de montage (1-2mm)</li>
+              <li>Ébavurer soigneusement après découpe</li>
+              <li>Protéger contre la corrosion</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Avantages -->
+        <div class="section-success">
+          <h4>💡 Avantages de la technique</h4>
+          <div class="info-grid-small">
+            <div>✅ Assemblage esthétique</div>
+            <div>✅ Résistance mécanique optimale</div>
+            <div>✅ Étanchéité améliorée</div>
+            <div>✅ Réduction des contraintes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE ESCALIERS ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+    <div class="page" id="escaliers">
+      <h2>🪜 Escalier</h2>
+
+      <!-- Définition -->
+      <div class="section-warning">
+        <h3>Nomenclature</h3>
+      </div>
+
+      <!-- Image d'illustration pour les escaliers -->
+      <div class="image-container">
+        <img src="images/escalier1.jpg" alt="Schéma escalier" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Nomenclature escalier</em></p>
+      </div>
+      <div class="image-container">
+        <img src="images/escalier2.jpg" alt="Schéma escalier" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Nomenclature escalier</em></p>
+      </div>
+
+      <div class="section-warning">
+        <h3>Inclinaisons</h3>
+      </div>
+      <div class="image-container">
+        <img src="images/inclinaisonEscalier.jpg" alt="escalier droit" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Les inclinaisons</em></p>
+      </div>
+
+      <div class="section-warning">
+        <h3>Les différents types d'escaliers</h3>
+      </div>
+      <div class="image-container">
+        <img src="images/escalierDroit.jpg" alt="escalier droit" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Escalier droit</em></p>
+        <img src="images/escalierQuartTournant.jpg" alt="escalier droit" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Escalier quart tournant</em></p>
+        <img src="images/escalierLBalance.jpg" alt="escalier balancé" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Escalier balancé</em></p>
+        <img src="images/escalierLpalierIntermediaire.jpg" alt="escalier avec palier intermédiaire" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Escalier avec palier intermédiaire</em></p>
+        <img src="images/escalierDoubleQuartierTournant.jpg" alt="escalier double avec quart tournant" class="image-moyenne image-cliquable" onclick="agrandirImage(this)">
+        <p><em>Escalier double avec quart tournant</em></p>
+      </div>
+    </div>
+
+    <!-- ===== MODAL POUR AGRANDIR LES IMAGES ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+    <div id="modal" class="modal">
+      <span class="fermer" onclick="fermerModal()">&times;</span>
+      <img id="imageAgrandie" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Image agrandie">
+    </div>
+
+    <!-- ===== LIEN VERS LE FICHIER JAVASCRIPT EXTERNE ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== -->
+    <script src="js/scripts.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "appId": "com.michel.metallerie",
+  "appName": "Metallerie",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}
