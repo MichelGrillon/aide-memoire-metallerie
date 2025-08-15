@@ -22,19 +22,20 @@ A noter : le fichier metallerie-pwa.html (qui fait office de page d'accueil) a d
 
 Dossier A :
 <!-- AU LIEU DE ÇA : -->
-<img src="data:image/jpeg;base64,/9j/4AAQ..." alt="Exemple">
+img src="data:image/jpeg;base64,/9j/4AAQ..." alt="Exemple"
 <!-- IL Y A : -->
-<img src="VOTRE_CODE_BASE64_COMPLET_ICI" alt="Ma vraie image">
+img src="VOTRE_CODE_BASE64_COMPLET_ICI" alt="Ma vraie image"
 Donc pas de dossier "images".
 
 Dossier B :
 <!-- AU LIEU DE ÇA : -->
-<img src="VOTRE_CODE_BASE64_COMPLET_ICI" alt="Ma vraie image">
+img src="VOTRE_CODE_BASE64_COMPLET_ICI" alt="Ma vraie image"
 <!-- IL Y A : -->
-<img src="data:image/jpeg;base64,/9j/4AAQ..." alt="Exemple">
+img src="data:image/jpeg;base64,/9j/4AAQ..." alt="Exemple"
 Donc présence d'un dossier "images".
 
 Structures :
+
 Dossier A :
 Pas de dossier, 3 fichiers : manifest.json, sw.js et metallerie-pwa.html.
 Les styles CSS et les scripts JavaScripts de calculs et autres, sont intégré dans le fichier html.
@@ -44,7 +45,9 @@ Dossier B :
 3 fichiers à la racine : manifest.json, sw.js et metallerie-pwa.html
 Les styles CSS et les scripts JavaScripts ne sont pas dans le code du fichier html, ils sont appellés à partir de celui çi.
 
+
 L'application APK :
+
 Je voulais aller plus loin que le site, plus simple d'ajout (site pwa = copies des fichiers vers le mobile puis création du raccourcis vers l'accueil du mobile à partir du site).
 Alors que pour l'apk, copie du fichier, installation de l'application automatique aprés la vérification de Google...
 Je voulais aussi avoir une base pour créer une application.
