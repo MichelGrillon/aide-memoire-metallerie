@@ -1,0 +1,15 @@
+{
+  "name": "Métallerie - Aide-mémoires",
+  "short_name": "Métallerie",
+  "start_url": "/metallerie/metallerie-pwa.html",
+  "display": "standalone",
+  "background_color": "#2d3748",
+  "theme_color": "#374151",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "128x128",
+      "type": "images/png"
+    }
+  ]
+}
