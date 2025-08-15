@@ -56,17 +56,16 @@ J'ai utilisé le dossier B (donc avec les dossiers "js", "images" et "css", bref
 
 Tout a été fait en ligne de commande :
 
-1. Création initiale du projet
-• Installer Node.js et Capacitor : `npm install --global @capacitor/cli`
-• Créer un dossier pour le projet et y placer les fichiers de la PWA (`index.html`, `manifest.json`,
-etc.).
-• Initialiser Capacitor : `npx cap init nom-app com.example.nomapp`
-• Ajouter Android : `npx cap add android`
+1. Création initiale du projet :
+- Installer Node.js et Capacitor : `npm install --global @capacitor/cli`
+- Créer un dossier pour le projet et y placer les fichiers de la PWA (`index.html`, `manifest.json`,etc.)
+- Initialiser Capacitor : `npx cap init nom-app com.example.nomapp`
+- Ajouter Android : `npx cap add android`
 
-2. Compilation initiale de l'APK
-• Copier les fichiers web dans le projet Android : `npx cap copy`
-• Aller dans le dossier Android : `cd android`
-• Compiler en debug : `gradlew.bat assembleDebug`
-• Récupérer l'APK dans : `android/app/build/outputs/apk/debug/app-debug.apk`
+2. Compilation initiale de l'APK :
+- Copier les fichiers web dans le projet Android : `npx cap copy`
+- Aller dans le dossier Android : `cd android`
+- Compiler en debug : `gradlew.bat assembleDebug`
+- Récupérer l'APK dans : `android/app/build/outputs/apk/debug/app-debug.apk`
 
 Actuellement, l'APK n'est pas signé, cela sera fait lors d'une prochaine mise à jour (v2) qui concernera quelques bugs de mise en page (tableaux trops grands, etc..).
