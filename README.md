@@ -73,3 +73,7 @@ Tout a été fait en ligne de commande :
 - Récupérer l'APK dans : `android/app/build/outputs/apk/debug/app-debug.apk`
 
 Actuellement, l'APK n'est pas signé, cela sera fait lors d'une prochaine mise à jour (v2) qui concernera quelques bugs de mise en page (tableaux trops grands, etc..).
+
+16-05-2025 :
+Mise à jour de l'APK en v1.5 suite à la correction de la mise en page.
+L'APK est maintenant signée.
